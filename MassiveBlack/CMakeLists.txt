@@ -54,3 +54,4 @@ target_link_libraries(MassiveBlack
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags
 )
+juce_generate_juce_header(MassiveBlack)
