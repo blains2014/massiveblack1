@@ -1,0 +1,33 @@
+name: Build MassiveBlack VST3
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Configure CMake
+        run: cmake -B build -S MassiveBlack -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build VST3
+        run: cmake --build build --config Release
+
+      - name: Build Installer (Inno Setup)
+        run: iscc MassiveBlack/installer/MassiveBlack.iss
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: MassiveBlack-Windows-Release
+          path: |
+            build/**/*_artefacts/Release/VST3/*.vst3
+            MassiveBlack/installer/Output/*.exe
